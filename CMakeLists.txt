@@ -15,7 +15,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${MY_BIN_OUTPUT_DIR}")
 
 set(MY_PACKAGE_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/packages")
 
-
 # ===== Target mainDX12 =====
 add_executable(FVTDX12_mainDX12 "Sources/mainDX12.cpp")
 
@@ -115,3 +114,13 @@ add_subdirectory(ThirdParty/DirectXShaderCompiler)
 ## SA libraries
 add_subdirectory(ThirdParty/SA/Logger)
 add_subdirectory(ThirdParty/SA/Maths)
+
+set_target_properties(FVTDX12_mainDX12 PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
+
+set_target_properties(FVTDX12_mainVK PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
+
+target_compile_options(FVTDX12_mainDX12 PRIVATE /wd4324)
