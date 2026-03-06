@@ -1,10 +1,10 @@
 # FromVulkanToDirectX12
 
-Learn **DirectX12** graphics API from **Vulkan**.\
-This repository implements a basic **Forward PBR renderer** in both Vulkan and DirectX12 to **compare** the two API and be able to quickly **make links** their implementation.
- - mainDX.cpp: DirectX12 implementation
- - mainVK.cpp: Vulkan implementation
+This repository is a fork of the original project that demonstrates a rendering pipeline using **DirectX 12 Mesh Shaders** instead of the traditional **Vertex Shader pipeline**.
 
+The goal of this fork is to experiment with and showcase modern **DirectX 12 GPU-driven rendering features**, particularly the **Mesh Shader pipeline**
+
+Press **F1** during execution to enable **debug rendering**, which visualizes the generated **meshlets** to help inspect how the mesh is partitioned and processed by the mesh shader pipeline.
 ## Required components
 
 ### CMake
@@ -34,7 +34,7 @@ For this project, the Agility SDK **615** is automatically downloaded and instal
 
 Start by **cloning** the **repository**.
 ```
-git clone https://github.com/mrouffet/FromVulkanToDirectX12.git
+git clone https://github.com/Maisquasar/FromVulkanToDirectX12.git
 cd FromVulkanToDirectX12
 ```
 
@@ -48,5 +48,7 @@ Now the project is ready to be open directly from the **root directory** using y
 
 
 ## Authors
+
+**Romain Bourgogne**
 
 **Maxime "mrouffet" ROUFFET** - main developer (maximerouffet@gmail.com)

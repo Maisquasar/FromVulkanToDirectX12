@@ -1,37 +1,11 @@
-//-------------------- Meshlet Debug Shader --------------------
-//
-// Replaces the PBR pixel shader with a flat per-meshlet color so that
-// every meshlet is immediately visible as a distinct colored patch.
-//
-// Root signature / heap layout is IDENTICAL to MeshShader.hlsl so the
-// same litRootSign can be reused without any rebinding changes.
-//
-// The meshlet index (SV_GroupID.x) is forwarded from the mesh shader
-// to the pixel shader as a nointerpolation uint so every fragment of a
-// meshlet receives the exact same index and therefore the exact same color.
 
-
-// ===================================================================
-// === Shared types                                                 ===
-// ===================================================================
-
-/// Per-vertex output of the mesh shader / input of the pixel shader.
 struct DebugMeshVertex
 {
     float4 svPosition    : SV_POSITION;
 
-    /**
-    * nointerpolation: the rasterizer does NOT interpolate this value
-    * across the triangle. Every fragment in the meshlet sees the same
-    * integer, which is what we want for a solid per-meshlet color.
-    */
     nointerpolation uint meshletIndex : MESHLET_INDEX;
 };
 
-
-// ===================================================================
-// === Mesh Shader Bindings (same registers as MeshShader.hlsl)    ===
-// ===================================================================
 
 struct Camera
 {
@@ -59,10 +33,6 @@ StructuredBuffer<uint>        meshletVerts : register(t6);
 StructuredBuffer<uint3>       meshletPrims : register(t7);
 StructuredBuffer<float3>      positions    : register(t8);
 
-
-// ===================================================================
-// === Mesh Shader                                                  ===
-// ===================================================================
 
 #define MAX_VERTS 128u
 #define MAX_PRIMS 128u
@@ -96,11 +66,6 @@ void mainMS_Debug(
     }
 }
 
-
-// ===================================================================
-// === Pixel Shader                                                 ===
-// ===================================================================
-
 struct DebugPixelInput : DebugMeshVertex { };
 
 struct DebugPixelOutput
@@ -109,14 +74,8 @@ struct DebugPixelOutput
 };
 
 
-/// Converts a meshlet index into a visually distinct RGB color.
-///
-/// Uses a Knuth multiplicative hash to scatter indices across hue space,
-/// then converts HSV -> RGB so adjacent indices still look different while
-/// the palette stays bright and saturated enough to be easy to read.
 float3 MeshletIndexToColor(uint index)
 {
-    // --- Hash the index to get a pseudo-random hue in [0, 1) ---
     uint h = index * 2654435761u;   // Knuth multiplicative hash
     float hue = float(h & 0xFFFFu) / 65536.0f;
 
@@ -124,7 +83,7 @@ float3 MeshletIndexToColor(uint index)
     const float S = 0.85f;
     const float V = 0.95f;
 
-    // --- HSV -> RGB (analytical, no texture lookup needed) ---
+    // HSV to RGB
     float H6   = hue * 6.0f;
     float frac = H6 - floor(H6);
     uint  sect = uint(H6) % 6u;
